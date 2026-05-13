@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedCameraRouteImport } from './routes/_authenticated/camera'
 import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
 import { Route as AuthenticatedProductSlugRouteImport } from './routes/_authenticated/product.$slug'
@@ -48,6 +49,11 @@ const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   path: '/home',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedCameraRoute = AuthenticatedCameraRouteImport.update({
   id: '/camera',
   path: '/camera',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/camera': typeof AuthenticatedCameraRoute
+  '/cart': typeof AuthenticatedCartRoute
   '/home': typeof AuthenticatedHomeRoute
   '/search': typeof AuthenticatedSearchRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/camera': typeof AuthenticatedCameraRoute
+  '/cart': typeof AuthenticatedCartRoute
   '/home': typeof AuthenticatedHomeRoute
   '/search': typeof AuthenticatedSearchRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/_authenticated/budget': typeof AuthenticatedBudgetRoute
   '/_authenticated/camera': typeof AuthenticatedCameraRoute
+  '/_authenticated/cart': typeof AuthenticatedCartRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/product/$slug': typeof AuthenticatedProductSlugRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/budget'
     | '/camera'
+    | '/cart'
     | '/home'
     | '/search'
     | '/product/$slug'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/budget'
     | '/camera'
+    | '/cart'
     | '/home'
     | '/search'
     | '/product/$slug'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/_authenticated/budget'
     | '/_authenticated/camera'
+    | '/_authenticated/cart'
     | '/_authenticated/home'
     | '/_authenticated/search'
     | '/_authenticated/product/$slug'
@@ -182,6 +194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHomeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/cart': {
+      id: '/_authenticated/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AuthenticatedCartRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/camera': {
       id: '/_authenticated/camera'
       path: '/camera'
@@ -209,6 +228,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedBudgetRoute: typeof AuthenticatedBudgetRoute
   AuthenticatedCameraRoute: typeof AuthenticatedCameraRoute
+  AuthenticatedCartRoute: typeof AuthenticatedCartRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedProductSlugRoute: typeof AuthenticatedProductSlugRoute
@@ -217,6 +237,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBudgetRoute: AuthenticatedBudgetRoute,
   AuthenticatedCameraRoute: AuthenticatedCameraRoute,
+  AuthenticatedCartRoute: AuthenticatedCartRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedProductSlugRoute: AuthenticatedProductSlugRoute,
