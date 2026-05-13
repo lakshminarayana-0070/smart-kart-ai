@@ -77,11 +77,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Smart Kart AI — AI-First Shopping Reimagined" },
       { name: "description", content: "Smart Kart AI: a futuristic AI-powered shopping experience with smart recommendations, camera search, and budget intelligence." },
       { name: "author", content: "Smart Kart AI" },
-      { property: "og:title", content: "Smart Kart AI — AI-First Shopping" },
-      { property: "og:description", content: "Personalized AI shopping, camera search, smart budget bundles." },
+      { property: "og:title", content: "Smart Kart AI — AI-First Shopping Reimagined" },
+      { property: "og:description", content: "Smart Kart AI: a futuristic AI-powered shopping experience with smart recommendations, camera search, and budget intelligence." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Smart Kart AI — AI-First Shopping Reimagined" },
+      { name: "twitter:description", content: "Smart Kart AI: a futuristic AI-powered shopping experience with smart recommendations, camera search, and budget intelligence." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/247758bf-cdf5-4b9b-8b9f-ba4f3729734e/id-preview-bbdcd8c0--dd090a67-001c-4949-ba97-f55f64093192.lovable.app-1778676828061.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/247758bf-cdf5-4b9b-8b9f-ba4f3729734e/id-preview-bbdcd8c0--dd090a67-001c-4949-ba97-f55f64093192.lovable.app-1778676828061.png" },
     ],
     links: [
       {
