@@ -1,0 +1,17 @@
+# Project Memory
+
+## Core
+Project: **Smart Kart AI** — AI-first futuristic ecommerce ecosystem (NOT a basic ecommerce app). Always treat as premium, futuristic, AI-themed, scalable, production-ready.
+Two core modules: (1) Customer AI Commerce Platform, (2) AI Seller & Admin Intelligence Platform.
+Stack: React + TypeScript + Tailwind + TanStack Start + Lovable Cloud (Supabase/Postgres) + OpenAI/Lovable AI Gateway + vector search.
+Design: futuristic, premium gradients, AI glow effects, minimal, dark/light ready, smooth animations. Never generic ecommerce look.
+DO NOT build anything until user explicitly requests a phase. Memory-only intake right now.
+
+## Memories
+- [Project vision & scope](mem://features/smart-kart-ai-overview) — Vision, tone, treat-as rules, non-goals
+- [Module 1: Customer platform](mem://features/module-1-customer) — Auth, landing, home, AI rec, smart search, PDP, review analyzer, camera shopping, budget assistant, cart/checkout, dashboard
+- [Module 2: Seller & admin](mem://features/module-2-seller-admin) — Seller dashboard, AI description/marketing/reply generators, inventory, orders, analytics, admin panel, AI usage monitoring, security
+- [AI systems](mem://features/ai-systems) — 7 AI subsystems: recommendation, review analysis, content gen, customer reply, budget, camera, smart search
+- [Database architecture](mem://features/database-architecture) — Entities to model when backend phase begins
+- [Future scalability roadmap](mem://features/future-roadmap) — Chatbot, voice commerce, AR, virtual try-on, dynamic pricing, trend prediction, personal shopper, fashion matching, inventory forecasting
+- [Design vision](mem://design/visual-direction) — Futuristic AI aesthetic, gradients, glow, premium typography, dark/light
