@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
+import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -48,6 +49,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedWishlistRoute = AuthenticatedWishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
   '/api/ai/chat': typeof ApiAiChatRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/home': typeof AuthenticatedHomeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
   '/api/ai/chat': typeof ApiAiChatRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/_authenticated/wishlist': typeof AuthenticatedWishlistRoute
   '/_authenticated/product/$slug': typeof AuthenticatedProductSlugRoute
   '/api/ai/chat': typeof ApiAiChatRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/orders'
     | '/search'
+    | '/studio'
     | '/wishlist'
     | '/product/$slug'
     | '/api/ai/chat'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/orders'
     | '/search'
+    | '/studio'
     | '/wishlist'
     | '/product/$slug'
     | '/api/ai/chat'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/orders'
     | '/_authenticated/search'
+    | '/_authenticated/studio'
     | '/_authenticated/wishlist'
     | '/_authenticated/product/$slug'
     | '/api/ai/chat'
@@ -258,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/wishlist'
       fullPath: '/wishlist'
       preLoaderRoute: typeof AuthenticatedWishlistRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/studio': {
+      id: '/_authenticated/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof AuthenticatedStudioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/search': {
@@ -350,6 +369,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedWishlistRoute: typeof AuthenticatedWishlistRoute
   AuthenticatedProductSlugRoute: typeof AuthenticatedProductSlugRoute
 }
@@ -364,6 +384,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedWishlistRoute: AuthenticatedWishlistRoute,
   AuthenticatedProductSlugRoute: AuthenticatedProductSlugRoute,
 }
