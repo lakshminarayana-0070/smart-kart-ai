@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
+import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -22,6 +23,8 @@ import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedCameraRouteImport } from './routes/_authenticated/camera'
 import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
+import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
 import { Route as AuthenticatedProductSlugRouteImport } from './routes/_authenticated/product.$slug'
 
 const SignupRoute = SignupRouteImport.update({
@@ -46,6 +49,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedWishlistRoute = AuthenticatedWishlistRouteImport.update({
   id: '/wishlist',
   path: '/wishlist',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
@@ -88,6 +96,16 @@ const AuthenticatedBudgetRoute = AuthenticatedBudgetRouteImport.update({
   path: '/budget',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai/chat',
+  path: '/api/ai/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedProductSlugRoute =
   AuthenticatedProductSlugRouteImport.update({
     id: '/product/$slug',
@@ -99,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/camera': typeof AuthenticatedCameraRoute
   '/cart': typeof AuthenticatedCartRoute
@@ -107,13 +126,16 @@ export interface FileRoutesByFullPath {
   '/home': typeof AuthenticatedHomeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
+  '/api/ai/chat': typeof ApiAiChatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/camera': typeof AuthenticatedCameraRoute
   '/cart': typeof AuthenticatedCartRoute
@@ -122,8 +144,10 @@ export interface FileRoutesByTo {
   '/home': typeof AuthenticatedHomeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/studio': typeof AuthenticatedStudioRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
+  '/api/ai/chat': typeof ApiAiChatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +155,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/budget': typeof AuthenticatedBudgetRoute
   '/_authenticated/camera': typeof AuthenticatedCameraRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
@@ -139,8 +164,10 @@ export interface FileRoutesById {
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/_authenticated/wishlist': typeof AuthenticatedWishlistRoute
   '/_authenticated/product/$slug': typeof AuthenticatedProductSlugRoute
+  '/api/ai/chat': typeof ApiAiChatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,6 +175,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/assistant'
     | '/budget'
     | '/camera'
     | '/cart'
@@ -156,13 +184,16 @@ export interface FileRouteTypes {
     | '/home'
     | '/orders'
     | '/search'
+    | '/studio'
     | '/wishlist'
     | '/product/$slug'
+    | '/api/ai/chat'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
+    | '/assistant'
     | '/budget'
     | '/camera'
     | '/cart'
@@ -171,14 +202,17 @@ export interface FileRouteTypes {
     | '/home'
     | '/orders'
     | '/search'
+    | '/studio'
     | '/wishlist'
     | '/product/$slug'
+    | '/api/ai/chat'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/login'
     | '/signup'
+    | '/_authenticated/assistant'
     | '/_authenticated/budget'
     | '/_authenticated/camera'
     | '/_authenticated/cart'
@@ -187,8 +221,10 @@ export interface FileRouteTypes {
     | '/_authenticated/home'
     | '/_authenticated/orders'
     | '/_authenticated/search'
+    | '/_authenticated/studio'
     | '/_authenticated/wishlist'
     | '/_authenticated/product/$slug'
+    | '/api/ai/chat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -196,6 +232,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  ApiAiChatRoute: typeof ApiAiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -233,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/wishlist'
       fullPath: '/wishlist'
       preLoaderRoute: typeof AuthenticatedWishlistRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/studio': {
+      id: '/_authenticated/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof AuthenticatedStudioRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/search': {
@@ -291,6 +335,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBudgetRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/api/ai/chat': {
+      id: '/api/ai/chat'
+      path: '/api/ai/chat'
+      fullPath: '/api/ai/chat'
+      preLoaderRoute: typeof ApiAiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/product/$slug': {
       id: '/_authenticated/product/$slug'
       path: '/product/$slug'
@@ -302,6 +360,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedBudgetRoute: typeof AuthenticatedBudgetRoute
   AuthenticatedCameraRoute: typeof AuthenticatedCameraRoute
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
@@ -310,11 +369,13 @@ interface AuthenticatedRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedWishlistRoute: typeof AuthenticatedWishlistRoute
   AuthenticatedProductSlugRoute: typeof AuthenticatedProductSlugRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedBudgetRoute: AuthenticatedBudgetRoute,
   AuthenticatedCameraRoute: AuthenticatedCameraRoute,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
@@ -323,6 +384,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedWishlistRoute: AuthenticatedWishlistRoute,
   AuthenticatedProductSlugRoute: AuthenticatedProductSlugRoute,
 }
@@ -336,17 +398,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  ApiAiChatRoute: ApiAiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

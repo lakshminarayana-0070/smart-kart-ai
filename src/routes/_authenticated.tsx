@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/app/Navbar";
 import { Footer } from "@/components/app/Footer";
+import { ChatLauncher } from "@/components/ai/ChatLauncher";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthLayout,
@@ -23,6 +24,7 @@ function AuthLayout() {
       <Navbar />
       <main className="flex-1"><Outlet /></main>
       <Footer />
+      <ChatLauncher />
     </div>
   );
 }
