@@ -22,6 +22,7 @@ import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
 import { Route as AuthenticatedCameraRouteImport } from './routes/_authenticated/camera'
 import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
 import { Route as AuthenticatedProductSlugRouteImport } from './routes/_authenticated/product.$slug'
 
@@ -89,6 +90,11 @@ const AuthenticatedBudgetRoute = AuthenticatedBudgetRouteImport.update({
   path: '/budget',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const ApiAiChatRoute = ApiAiChatRouteImport.update({
   id: '/api/ai/chat',
   path: '/api/ai/chat',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/camera': typeof AuthenticatedCameraRoute
   '/cart': typeof AuthenticatedCartRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/budget': typeof AuthenticatedBudgetRoute
   '/camera': typeof AuthenticatedCameraRoute
   '/cart': typeof AuthenticatedCartRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/budget': typeof AuthenticatedBudgetRoute
   '/_authenticated/camera': typeof AuthenticatedCameraRoute
   '/_authenticated/cart': typeof AuthenticatedCartRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/assistant'
     | '/budget'
     | '/camera'
     | '/cart'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/signup'
+    | '/assistant'
     | '/budget'
     | '/camera'
     | '/cart'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login'
     | '/signup'
+    | '/_authenticated/assistant'
     | '/_authenticated/budget'
     | '/_authenticated/camera'
     | '/_authenticated/cart'
@@ -304,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBudgetRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/api/ai/chat': {
       id: '/api/ai/chat'
       path: '/api/ai/chat'
@@ -322,6 +341,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedBudgetRoute: typeof AuthenticatedBudgetRoute
   AuthenticatedCameraRoute: typeof AuthenticatedCameraRoute
   AuthenticatedCartRoute: typeof AuthenticatedCartRoute
@@ -335,6 +355,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedBudgetRoute: AuthenticatedBudgetRoute,
   AuthenticatedCameraRoute: AuthenticatedCameraRoute,
   AuthenticatedCartRoute: AuthenticatedCartRoute,
@@ -361,3 +382,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
