@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet } from "lucide-react";
+import { Sparkles, Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet, Bot, Wand2 } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
@@ -27,6 +27,8 @@ export function Navbar() {
           <Link to="/search" className="px-3 py-2 text-sm hover:text-primary transition">Search</Link>
           <Link to="/camera" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Camera className="size-3.5" />Camera</Link>
           <Link to="/budget" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Wallet className="size-3.5" />Budget AI</Link>
+          <Link to="/assistant" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Bot className="size-3.5" />Assistant</Link>
+          <Link to="/studio" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Wand2 className="size-3.5" />Studio</Link>
         </nav>
 
         <button
