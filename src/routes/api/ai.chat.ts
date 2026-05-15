@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import { openai, DEFAULT_MODEL, DEFAULT_TEMPERATURE, DEFAULT_MAX_TOKENS } from "@/ai/openai.server";
+import { chatStream, AIGatewayError } from "@/ai/openai.server";
 import { PROMPTS } from "@/ai/prompts";
 import { z } from "zod";
 
@@ -62,26 +62,49 @@ export const Route = createFileRoute("/api/ai/chat")({
             { role: "user" as const, content: json.message },
           ];
 
-          const stream = await openai().chat.completions.create({
-            model: DEFAULT_MODEL,
-            temperature: DEFAULT_TEMPERATURE,
-            max_tokens: DEFAULT_MAX_TOKENS,
-            stream: true,
-            messages,
-          });
+          let upstream: Response;
+          try {
+            upstream = await chatStream({ messages });
+          } catch (err) {
+            const status = err instanceof AIGatewayError ? err.status : 500;
+            return new Response(JSON.stringify({ error: (err as Error).message }), {
+              status, headers: { "Content-Type": "application/json" },
+            });
+          }
 
           const encoder = new TextEncoder();
+          const decoder = new TextDecoder();
           let assistantText = "";
           const finalChatId = chatId;
           const sseStream = new ReadableStream({
             async start(controller) {
               controller.enqueue(encoder.encode(`event: meta\ndata: ${JSON.stringify({ chatId: finalChatId })}\n\n`));
+              const reader = upstream.body!.getReader();
+              let buffer = "";
               try {
-                for await (const chunk of stream) {
-                  const delta = chunk.choices[0]?.delta?.content ?? "";
-                  if (delta) {
-                    assistantText += delta;
-                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`));
+                while (true) {
+                  const { done, value } = await reader.read();
+                  if (done) break;
+                  buffer += decoder.decode(value, { stream: true });
+                  let nl: number;
+                  while ((nl = buffer.indexOf("\n")) !== -1) {
+                    let line = buffer.slice(0, nl);
+                    buffer = buffer.slice(nl + 1);
+                    if (line.endsWith("\r")) line = line.slice(0, -1);
+                    if (!line.startsWith("data: ")) continue;
+                    const payload = line.slice(6).trim();
+                    if (payload === "[DONE]") { buffer = ""; break; }
+                    try {
+                      const parsed = JSON.parse(payload);
+                      const delta = parsed.choices?.[0]?.delta?.content ?? "";
+                      if (delta) {
+                        assistantText += delta;
+                        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`));
+                      }
+                    } catch {
+                      buffer = line + "\n" + buffer;
+                      break;
+                    }
                   }
                 }
                 controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
