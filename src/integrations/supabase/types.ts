@@ -391,6 +391,45 @@ export type Database = {
         }
         Relationships: []
       }
+      smart_kart_ai_knowledge: {
+        Row: {
+          business_name: string
+          category: Database["public"]["Enums"]["smart_kart_knowledge_category"]
+          content: string
+          created_at: string
+          embedding: string | null
+          id: string
+          keywords: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_name: string
+          category: Database["public"]["Enums"]["smart_kart_knowledge_category"]
+          content: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          keywords?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_name?: string
+          category?: Database["public"]["Enums"]["smart_kart_knowledge_category"]
+          content?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          keywords?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -453,6 +492,19 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "customer"
+      smart_kart_knowledge_category:
+        | "shopping_preferences"
+        | "budget_rules"
+        | "favorite_brands"
+        | "product_interests"
+        | "purchase_history"
+        | "wishlist"
+        | "seller_business_info"
+        | "marketing_style"
+        | "customer_support_rules"
+        | "product_catalog_notes"
+        | "review_insights"
+        | "custom_ai_instructions"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -581,6 +633,20 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "customer"],
+      smart_kart_knowledge_category: [
+        "shopping_preferences",
+        "budget_rules",
+        "favorite_brands",
+        "product_interests",
+        "purchase_history",
+        "wishlist",
+        "seller_business_info",
+        "marketing_style",
+        "customer_support_rules",
+        "product_catalog_notes",
+        "review_insights",
+        "custom_ai_instructions",
+      ],
     },
   },
 } as const
