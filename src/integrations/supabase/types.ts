@@ -398,8 +398,11 @@ export type Database = {
           content: string
           created_at: string
           embedding: string | null
+          embedding_dimension: number | null
+          embedding_model: string | null
           id: string
           keywords: string[] | null
+          knowledge_name: string | null
           title: string
           updated_at: string
           user_id: string
@@ -410,8 +413,11 @@ export type Database = {
           content: string
           created_at?: string
           embedding?: string | null
+          embedding_dimension?: number | null
+          embedding_model?: string | null
           id?: string
           keywords?: string[] | null
+          knowledge_name?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -422,8 +428,11 @@ export type Database = {
           content?: string
           created_at?: string
           embedding?: string | null
+          embedding_dimension?: number | null
+          embedding_model?: string | null
           id?: string
           keywords?: string[] | null
+          knowledge_name?: string | null
           title?: string
           updated_at?: string
           user_id?: string
