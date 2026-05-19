@@ -17,6 +17,7 @@ import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
+import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
@@ -64,6 +65,11 @@ const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
 const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
   '/studio': typeof AuthenticatedStudioRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof AuthenticatedCheckoutRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
   '/studio': typeof AuthenticatedStudioRoute
@@ -162,6 +170,7 @@ export interface FileRoutesById {
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
   '/_authenticated/studio': typeof AuthenticatedStudioRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/dashboard'
     | '/home'
+    | '/knowledge'
     | '/orders'
     | '/search'
     | '/studio'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/dashboard'
     | '/home'
+    | '/knowledge'
     | '/orders'
     | '/search'
     | '/studio'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout'
     | '/_authenticated/dashboard'
     | '/_authenticated/home'
+    | '/_authenticated/knowledge'
     | '/_authenticated/orders'
     | '/_authenticated/search'
     | '/_authenticated/studio'
@@ -291,6 +303,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof AuthenticatedOrdersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/knowledge': {
+      id: '/_authenticated/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/home': {
@@ -367,6 +386,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCheckoutRoute: typeof AuthenticatedCheckoutRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
   AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
@@ -382,6 +402,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCheckoutRoute: AuthenticatedCheckoutRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
   AuthenticatedStudioRoute: AuthenticatedStudioRoute,
@@ -403,3 +424,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
