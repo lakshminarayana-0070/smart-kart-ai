@@ -498,6 +498,21 @@ export type Database = {
         }
         Returns: boolean
       }
+      match_memory: {
+        Args: {
+          match_count: number
+          match_threshold: number
+          query_embedding: string
+        }
+        Returns: {
+          category: string
+          content: string
+          id: string
+          keywords: string[]
+          similarity: number
+          title: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "customer"
