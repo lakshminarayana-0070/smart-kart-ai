@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet, Bot, Wand2, Brain } from "lucide-react";
+import { Sparkles, Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet, Bot, Wand2, Brain, BrainCircuit } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
@@ -30,6 +30,7 @@ export function Navbar() {
           <Link to="/assistant" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Bot className="size-3.5" />Assistant</Link>
           <Link to="/studio" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Wand2 className="size-3.5" />Studio</Link>
           <Link to="/knowledge" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><Brain className="size-3.5" />Knowledge</Link>
+          <Link to="/shopping-memory" className="px-3 py-2 text-sm hover:text-primary transition flex items-center gap-1.5"><BrainCircuit className="size-3.5" />Memory</Link>
         </nav>
 
         <button
@@ -55,6 +56,7 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/shopping-memory" })}>Shopping Memory</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate({ to: "/wishlist" })}>Wishlist</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate({ to: "/orders" })}>Orders</DropdownMenuItem>
                   <DropdownMenuSeparator />
