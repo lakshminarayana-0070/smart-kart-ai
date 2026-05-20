@@ -111,6 +111,38 @@ function ShoppingMemoryPage() {
     onSettled: () => setPendingDelete(null),
   });
 
+  // ----- Semantic search test panel -----
+  const search = useServerFn(searchMemoryFn);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchData, setSearchData] = useState<{
+    results: MemorySearchResult[];
+    query_used: string;
+    count: number;
+    embedding_dimension: number;
+    threshold: number;
+  } | null>(null);
+
+  const searchMutation = useMutation({
+    mutationFn: async (q: string) =>
+      search({ data: { query: q, match_count: 5, match_threshold: 0.5 } }),
+    onSuccess: (d) => setSearchData(d),
+    onError: (e: Error) => toast.error(e.message || "Search failed"),
+  });
+
+  const runSearch = () => {
+    const q = searchQuery.trim();
+    if (!q) return;
+    searchMutation.mutate(q);
+  };
+
+  const exampleQueries = [
+    "refund policy",
+    "summer fashion offers",
+    "damaged item returns",
+    "shipping FAQ",
+    "electronics discounts",
+  ];
+
   const canSave =
     name.trim().length > 0 &&
     title.trim().length > 0 &&
