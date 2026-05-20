@@ -18,11 +18,15 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { listMemoryFn, deleteMemoryFn } from "@/lib/shopping.functions";
+import { listMemoryFn, deleteMemoryFn, searchMemoryFn, type MemorySearchResult } from "@/lib/shopping.functions";
 import { embedAndSaveFn } from "@/lib/smart-kart-knowledge.functions";
 import { CATEGORIES, categoryEmoji, categoryLabel, type KnowledgeCategory } from "@/lib/knowledge";
+import { Search, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/shopping-memory")({
   component: ShoppingMemoryPage,
