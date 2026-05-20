@@ -3,6 +3,13 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { chatJSON } from "./openai.server";
 import { PROMPTS } from "./prompts";
+import { retrieveMemoryForUser } from "@/lib/ai/rag-retrieve.server";
+import {
+  buildRagPrompt,
+  buildSearchQuery,
+  formatRetrievedContext,
+  isRagEnabled,
+} from "@/lib/ai/rag-prompt";
 
 async function logGeneration(supabase: any, userId: string, kind: string, input: any, output: any, model: string, tokensIn?: number, tokensOut?: number) {
   await supabase.from("ai_generations").insert({
@@ -73,12 +80,57 @@ export const generateMarketing = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => marketingSchema.parse(d))
   .handler(async ({ data, context }) => {
-    const user = `Product: ${data.product}\nAudience: ${data.audience || "general"}\nTone: ${data.tone}\n\nReturn JSON: { "headlines": string[] (5, ≤60 chars each), "ad_copy": string[] (3 short ad bodies), "instagram_caption": string, "facebook_ad": string, "email_subject": string, "email_body": string, "push_notification": string (≤80 chars), "seo_keywords": string[] (8) }`;
+    const userInputs = `Product: ${data.product}\nAudience: ${data.audience || "general"}\nTone: ${data.tone}\n\nReturn JSON: { "headlines": string[] (5, ≤60 chars each), "ad_copy": string[] (3 short ad bodies), "instagram_caption": string, "facebook_ad": string, "email_subject": string, "email_body": string, "push_notification": string (≤80 chars), "seo_keywords": string[] (8) }`;
+
+    // RAG enrichment (enhancement-only — must never block generation).
+    let userMessage = userInputs;
+    let ragMatches: Awaited<ReturnType<typeof retrieveMemoryForUser>>["results"] = [];
+    let ragFallback = false;
+    let ragQuery: string | undefined;
+
+    if (isRagEnabled("marketing-generator")) {
+      ragQuery = buildSearchQuery("marketing generator", {
+        product: data.product,
+        audience: data.audience,
+        tone: data.tone,
+      });
+      const retrieval = await retrieveMemoryForUser(context.supabase, ragQuery, {
+        matchCount: 5,
+        matchThreshold: 0.5,
+      });
+      ragMatches = retrieval.results;
+      ragFallback = !!retrieval.error;
+      const formatted = formatRetrievedContext(ragMatches);
+      userMessage = buildRagPrompt({
+        userInputs,
+        formattedContext: formatted,
+      });
+      console.log(
+        `[RAG] Query: ${ragQuery} | Matches: ${ragMatches.length} | Generation Mode: ${formatted ? "RAG" : "plain"} | Fallback Used: ${ragFallback}`,
+      );
+    }
+
     const { data: out, tokensIn, tokensOut, model } = await chatJSON<any>({
-      system: PROMPTS.marketing, user, maxTokens: 1800,
+      system: PROMPTS.marketing, user: userMessage, maxTokens: 1800,
     });
     await logGeneration(context.supabase, context.userId, "marketing", data, out, model, tokensIn, tokensOut);
-    return out;
+    // Additive `_rag` field — existing UI/parsing keeps working.
+    return {
+      ...out,
+      _rag: {
+        used: ragMatches.length > 0,
+        count: ragMatches.length,
+        query: ragQuery ?? null,
+        fallback: ragFallback,
+        matches: ragMatches.map((m) => ({
+          id: m.id,
+          title: m.title,
+          category: m.category,
+          similarity: m.similarity,
+          content: m.content.slice(0, 280),
+        })),
+      },
+    };
   });
 
 /* ========== Chat history ========== */
