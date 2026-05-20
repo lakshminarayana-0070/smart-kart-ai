@@ -18,11 +18,15 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { listMemoryFn, deleteMemoryFn } from "@/lib/shopping.functions";
+import { listMemoryFn, deleteMemoryFn, searchMemoryFn, type MemorySearchResult } from "@/lib/shopping.functions";
 import { embedAndSaveFn } from "@/lib/smart-kart-knowledge.functions";
 import { CATEGORIES, categoryEmoji, categoryLabel, type KnowledgeCategory } from "@/lib/knowledge";
+import { Search, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/shopping-memory")({
   component: ShoppingMemoryPage,
@@ -106,6 +110,38 @@ function ShoppingMemoryPage() {
     onError: (e: Error) => toast.error(e.message || "Failed to delete"),
     onSettled: () => setPendingDelete(null),
   });
+
+  // ----- Semantic search test panel -----
+  const search = useServerFn(searchMemoryFn);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchData, setSearchData] = useState<{
+    results: MemorySearchResult[];
+    query_used: string;
+    count: number;
+    embedding_dimension: number;
+    threshold: number;
+  } | null>(null);
+
+  const searchMutation = useMutation({
+    mutationFn: async (q: string) =>
+      search({ data: { query: q, match_count: 5, match_threshold: 0.5 } }),
+    onSuccess: (d) => setSearchData(d),
+    onError: (e: Error) => toast.error(e.message || "Search failed"),
+  });
+
+  const runSearch = () => {
+    const q = searchQuery.trim();
+    if (!q) return;
+    searchMutation.mutate(q);
+  };
+
+  const exampleQueries = [
+    "refund policy",
+    "summer fashion offers",
+    "damaged item returns",
+    "shipping FAQ",
+    "electronics discounts",
+  ];
 
   const canSave =
     name.trim().length > 0 &&
@@ -357,6 +393,141 @@ function ShoppingMemoryPage() {
               })}
             </div>
           )}
+        </section>
+
+        {/* Semantic Search Test Panel */}
+        <section className="mt-12">
+          <Accordion type="single" collapsible className="rounded-2xl glass ai-border overflow-hidden">
+            <AccordionItem value="semantic-search" className="border-none">
+              <AccordionTrigger className="px-5 py-4 hover:no-underline">
+                <div className="flex items-center gap-2 text-left">
+                  <div className="size-9 rounded-xl bg-gradient-primary glow flex items-center justify-center">
+                    <Search className="size-4 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-sm">🔍 Test Semantic Search</div>
+                    <div className="text-[11px] text-muted-foreground">
+                      Query your AI memory with pgvector + Gemini embeddings
+                    </div>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-5 pb-5">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") runSearch(); }}
+                    placeholder="Search AI memory..."
+                    className="bg-transparent border-white/10"
+                    disabled={searchMutation.isPending}
+                  />
+                  <Button
+                    onClick={runSearch}
+                    disabled={!searchQuery.trim() || searchMutation.isPending}
+                    className="bg-gradient-primary text-primary-foreground glow shrink-0"
+                  >
+                    {searchMutation.isPending ? (
+                      <><Loader2 className="size-4 mr-1.5 animate-spin" /> Searching…</>
+                    ) : (
+                      <><Zap className="size-4 mr-1.5" /> Run Semantic Search</>
+                    )}
+                  </Button>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {exampleQueries.map((q) => (
+                    <button
+                      key={q}
+                      onClick={() => setSearchQuery(q)}
+                      className="px-2 py-0.5 rounded-full text-[11px] bg-accent/10 border border-accent/20 text-accent hover:bg-accent/20 transition"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-5">
+                  {searchMutation.isPending ? (
+                    <div className="space-y-3">
+                      <div className="text-xs text-muted-foreground animate-pulse">
+                        Searching AI memory…
+                      </div>
+                      {[0, 1, 2].map((i) => (
+                        <Skeleton key={i} className="h-20 rounded-xl" />
+                      ))}
+                    </div>
+                  ) : searchData ? (
+                    searchData.results.length === 0 ? (
+                      <div className="rounded-xl border-2 border-dashed border-white/10 p-8 text-center">
+                        <div className="font-semibold">No semantic matches found</div>
+                        <div className="text-sm text-muted-foreground mt-1">
+                          Try broader shopping or ecommerce terms.
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <AnimatePresence>
+                          {searchData.results
+                            .slice()
+                            .sort((a, b) => b.similarity - a.similarity)
+                            .map((r, idx) => (
+                            <motion.div
+                              key={r.id}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ delay: idx * 0.04 }}
+                              className="relative rounded-xl p-4 glass hover:-translate-y-0.5 hover:shadow-[0_0_24px_-6px_hsl(var(--accent)/0.5)] transition border border-white/5"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <Badge variant="outline" className="text-[10px]">
+                                      {categoryEmoji(r.category as KnowledgeCategory)} {categoryLabel(r.category as KnowledgeCategory)}
+                                    </Badge>
+                                  </div>
+                                  <h4 className="mt-2 font-semibold truncate">{r.title}</h4>
+                                  <p className="mt-1 text-sm text-muted-foreground line-clamp-2 whitespace-pre-wrap">
+                                    {r.content}
+                                  </p>
+                                  {r.keywords && r.keywords.length > 0 && (
+                                    <div className="flex flex-wrap gap-1 mt-2">
+                                      {r.keywords.map((k) => (
+                                        <span key={k} className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md text-[10px] bg-muted text-muted-foreground">
+                                          <Tag className="size-2.5" /> {k}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="shrink-0 text-right">
+                                  <div className="font-display text-2xl font-bold text-gradient leading-none">
+                                    {Math.round(r.similarity * 100)}%
+                                  </div>
+                                  <div className="text-[10px] text-muted-foreground mt-0.5">
+                                    match
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+
+                        <div className="text-[10px] text-muted-foreground font-mono pt-2 border-t border-white/5">
+                          Results: {searchData.count} · Threshold: {searchData.threshold} · Embedding Dimensions: {searchData.embedding_dimension}
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <div className="text-xs text-muted-foreground">
+                      Run a query to see semantic matches from your AI memory.
+                    </div>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </section>
       </div>
 
