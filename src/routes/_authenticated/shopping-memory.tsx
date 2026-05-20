@@ -113,12 +113,13 @@ function ShoppingMemoryPage() {
     content.trim().length >= MIN_CONTENT &&
     !saveMutation.isPending;
 
+  type Entry = NonNullable<typeof data>["entries"][number];
   const grouped = useMemo(() => {
-    const map = new Map<KnowledgeCategory, typeof data extends { entries: infer R } ? R : never>();
+    const map = new Map<KnowledgeCategory, Entry[]>();
     (data?.entries ?? []).forEach((e) => {
-      const arr = (map.get(e.category) ?? []) as never[];
-      (arr as unknown[]).push(e);
-      map.set(e.category, arr as never);
+      const arr = map.get(e.category) ?? [];
+      arr.push(e);
+      map.set(e.category, arr);
     });
     return map;
   }, [data]);
@@ -288,9 +289,7 @@ function ShoppingMemoryPage() {
           ) : (
             <div className="space-y-8">
               {CATEGORIES.map((cat) => {
-                const entries = grouped.get(cat.value) as
-                  | NonNullable<typeof data>["entries"]
-                  | undefined;
+                const entries = grouped.get(cat.value);
                 if (!entries || entries.length === 0) return null;
                 return (
                   <div key={cat.value}>
