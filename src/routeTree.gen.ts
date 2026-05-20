@@ -15,6 +15,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
 import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
+import { Route as AuthenticatedShoppingMemoryRouteImport } from './routes/_authenticated/shopping-memory'
 import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
 import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
 import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
@@ -57,6 +58,12 @@ const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
   path: '/studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedShoppingMemoryRoute =
+  AuthenticatedShoppingMemoryRouteImport.update({
+    id: '/shopping-memory',
+    path: '/shopping-memory',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -133,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/shopping-memory': typeof AuthenticatedShoppingMemoryRoute
   '/studio': typeof AuthenticatedStudioRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
@@ -152,6 +160,7 @@ export interface FileRoutesByTo {
   '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/orders': typeof AuthenticatedOrdersRoute
   '/search': typeof AuthenticatedSearchRoute
+  '/shopping-memory': typeof AuthenticatedShoppingMemoryRoute
   '/studio': typeof AuthenticatedStudioRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
   '/product/$slug': typeof AuthenticatedProductSlugRoute
@@ -173,6 +182,7 @@ export interface FileRoutesById {
   '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
   '/_authenticated/orders': typeof AuthenticatedOrdersRoute
   '/_authenticated/search': typeof AuthenticatedSearchRoute
+  '/_authenticated/shopping-memory': typeof AuthenticatedShoppingMemoryRoute
   '/_authenticated/studio': typeof AuthenticatedStudioRoute
   '/_authenticated/wishlist': typeof AuthenticatedWishlistRoute
   '/_authenticated/product/$slug': typeof AuthenticatedProductSlugRoute
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/knowledge'
     | '/orders'
     | '/search'
+    | '/shopping-memory'
     | '/studio'
     | '/wishlist'
     | '/product/$slug'
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/knowledge'
     | '/orders'
     | '/search'
+    | '/shopping-memory'
     | '/studio'
     | '/wishlist'
     | '/product/$slug'
@@ -233,6 +245,7 @@ export interface FileRouteTypes {
     | '/_authenticated/knowledge'
     | '/_authenticated/orders'
     | '/_authenticated/search'
+    | '/_authenticated/shopping-memory'
     | '/_authenticated/studio'
     | '/_authenticated/wishlist'
     | '/_authenticated/product/$slug'
@@ -289,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/studio'
       fullPath: '/studio'
       preLoaderRoute: typeof AuthenticatedStudioRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/shopping-memory': {
+      id: '/_authenticated/shopping-memory'
+      path: '/shopping-memory'
+      fullPath: '/shopping-memory'
+      preLoaderRoute: typeof AuthenticatedShoppingMemoryRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/search': {
@@ -389,6 +409,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
   AuthenticatedOrdersRoute: typeof AuthenticatedOrdersRoute
   AuthenticatedSearchRoute: typeof AuthenticatedSearchRoute
+  AuthenticatedShoppingMemoryRoute: typeof AuthenticatedShoppingMemoryRoute
   AuthenticatedStudioRoute: typeof AuthenticatedStudioRoute
   AuthenticatedWishlistRoute: typeof AuthenticatedWishlistRoute
   AuthenticatedProductSlugRoute: typeof AuthenticatedProductSlugRoute
@@ -405,6 +426,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
   AuthenticatedOrdersRoute: AuthenticatedOrdersRoute,
   AuthenticatedSearchRoute: AuthenticatedSearchRoute,
+  AuthenticatedShoppingMemoryRoute: AuthenticatedShoppingMemoryRoute,
   AuthenticatedStudioRoute: AuthenticatedStudioRoute,
   AuthenticatedWishlistRoute: AuthenticatedWishlistRoute,
   AuthenticatedProductSlugRoute: AuthenticatedProductSlugRoute,
