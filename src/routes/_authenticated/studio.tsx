@@ -7,9 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Copy, Loader2, Check, FileText, MessageSquare, MessagesSquare, Megaphone } from "lucide-react";
+import { Sparkles, Copy, Loader2, Check, FileText, MessageSquare, MessagesSquare, Megaphone, Brain } from "lucide-react";
 import { generateDescription, analyzeReviews, generateReply, generateMarketing } from "@/ai/ai.functions";
 import { toast } from "sonner";
+import { RagBadge } from "@/components/ai/rag-badge";
+import { NoMemoryBanner } from "@/components/ai/no-memory-banner";
 
 export const Route = createFileRoute("/_authenticated/studio")({
   head: () => ({ meta: [{ title: "AI Studio — Smart Kart AI" }] }),
@@ -170,8 +172,26 @@ function ReplyTab() {
 
 function MarketingTab() {
   const [form, setForm] = useState<{ product: string; audience: string; tone: "bold" | "playful" | "premium" | "friendly" | "urgent" }>({ product: "", audience: "", tone: "bold" });
+  const [phase, setPhase] = useState<"idle" | "retrieving" | "generating">("idle");
   const fn = useServerFn(generateMarketing);
-  const m = useMutation({ mutationFn: () => fn({ data: form }), onError: (e: Error) => toast.error(e.message) });
+  const m = useMutation({
+    mutationFn: async () => {
+      setPhase("retrieving");
+      // brief retrieval-phase UX (server retrieves then generates; this shows the two phases visually)
+      const retrievalUx = new Promise((r) => setTimeout(r, 650));
+      const fetchPromise = fn({ data: form });
+      await retrievalUx;
+      setPhase("generating");
+      const out = await fetchPromise;
+      setPhase("idle");
+      return out;
+    },
+    onError: (e: Error) => { setPhase("idle"); toast.error(e.message); },
+  });
+  const rag = (m.data as any)?._rag as
+    | { used: boolean; count: number; matches: { id: string; title: string; category: string; similarity: number; content: string }[] }
+    | undefined;
+  const showNoMemoryBanner = !!m.data && (!rag || rag.count === 0);
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <Card>
@@ -184,13 +204,36 @@ function MarketingTab() {
           </SelectContent>
         </Select>
         <Button onClick={() => m.mutate()} disabled={m.isPending || !form.product.trim()} className="w-full bg-gradient-primary text-primary-foreground glow">
-          {m.isPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />} Generate campaign
+          {m.isPending ? (
+            <><Loader2 className="size-4 animate-spin mr-1.5" /> {phase === "retrieving" ? "Searching memory…" : "Generating…"}</>
+          ) : (
+            <><Sparkles className="size-4 mr-1.5" /> Generate campaign</>
+          )}
         </Button>
+        <p className="text-[10px] text-muted-foreground inline-flex items-center gap-1">
+          <Brain className="size-3 text-accent" /> RAG-enhanced — personalized from your AI memory
+        </p>
       </Card>
       <Card>
-        {!m.data && <p className="text-sm text-muted-foreground">Campaign assets appear here.</p>}
+        {m.isPending && (
+          <div className="space-y-2">
+            <div className="text-xs text-accent inline-flex items-center gap-1.5">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-75 animate-ping" />
+                <span className="relative inline-flex rounded-full size-2 bg-accent" />
+              </span>
+              {phase === "retrieving" ? "Searching memory…" : "Generating campaign…"}
+            </div>
+            <div className="h-3 rounded bg-muted/40 animate-pulse" />
+            <div className="h-3 rounded bg-muted/40 animate-pulse w-5/6" />
+            <div className="h-3 rounded bg-muted/40 animate-pulse w-2/3" />
+          </div>
+        )}
+        {!m.isPending && !m.data && <p className="text-sm text-muted-foreground">Campaign assets appear here.</p>}
         {m.data && (
           <div className="space-y-3">
+            {showNoMemoryBanner && <NoMemoryBanner />}
+            {rag && rag.count > 0 && <RagBadge matches={rag.matches} />}
             <Section title="Headlines"><ul className="text-sm space-y-1">{m.data.headlines?.map((h: string, i: number) => <li key={i} className="flex items-center justify-between gap-2"><span>· {h}</span><CopyBtn text={h} /></li>)}</ul></Section>
             <Section title="Ad copy"><ul className="text-sm space-y-2">{m.data.ad_copy?.map((c: string, i: number) => <li key={i}>{c}</li>)}</ul></Section>
             <Section title="Instagram caption" right={<CopyBtn text={m.data.instagram_caption} />}><p className="text-sm whitespace-pre-wrap">{m.data.instagram_caption}</p></Section>
