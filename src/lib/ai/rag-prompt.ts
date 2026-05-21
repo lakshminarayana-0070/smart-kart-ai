@@ -13,7 +13,7 @@ export type RetrievedMemory = {
 };
 
 /** Feature ids opted-in to the RAG-enhanced generation flow. */
-export const RAG_ENABLED_FEATURES = ["marketing-generator"] as const;
+export const RAG_ENABLED_FEATURES = ["marketing-generator", "email-composer"] as const;
 export type RagFeatureId = (typeof RAG_ENABLED_FEATURES)[number];
 
 export function isRagEnabled(feature: string): feature is RagFeatureId {
