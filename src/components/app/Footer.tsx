@@ -1,12 +1,11 @@
-import { Sparkles } from "lucide-react";
+import logo from "@/assets/smart-kart-logo.png";
 export function Footer() {
   return (
     <footer className="mt-24 border-t glass">
       <div className="mx-auto max-w-7xl px-4 py-12 grid md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="size-7 rounded-lg bg-gradient-primary grid place-items-center"><Sparkles className="size-3.5 text-primary-foreground" /></div>
-            <span className="font-display font-bold">Smart Kart <span className="text-gradient">AI</span></span>
+            <img src={logo} alt="Smart Kart AI" className="h-8 w-auto object-contain" />
           </div>
           <p className="text-sm text-muted-foreground">The next-generation AI commerce platform. Personalized shopping powered by intelligence.</p>
         </div>
