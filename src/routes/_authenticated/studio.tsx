@@ -140,8 +140,25 @@ function ReviewsTab() {
 
 function ReplyTab() {
   const [form, setForm] = useState<{ message: string; context: string; tone: "friendly" | "professional" | "premium" | "concise" | "empathetic" }>({ message: "", context: "", tone: "professional" });
+  const [phase, setPhase] = useState<"idle" | "retrieving" | "generating">("idle");
   const fn = useServerFn(generateReply);
-  const m = useMutation({ mutationFn: () => fn({ data: form }), onError: (e: Error) => toast.error(e.message) });
+  const m = useMutation({
+    mutationFn: async () => {
+      setPhase("retrieving");
+      const retrievalUx = new Promise((r) => setTimeout(r, 650));
+      const fetchPromise = fn({ data: form });
+      await retrievalUx;
+      setPhase("generating");
+      const out = await fetchPromise;
+      setPhase("idle");
+      return out;
+    },
+    onError: (e: Error) => { setPhase("idle"); toast.error(e.message); },
+  });
+  const rag = (m.data as any)?._rag as
+    | { used: boolean; count: number; matches: { id: string; title: string; category: string; similarity: number; content: string }[] }
+    | undefined;
+  const showNoMemoryBanner = !!m.data && (!rag || rag.count === 0);
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <Card>
@@ -154,13 +171,36 @@ function ReplyTab() {
           </SelectContent>
         </Select>
         <Button onClick={() => m.mutate()} disabled={m.isPending || !form.message.trim()} className="w-full bg-gradient-primary text-primary-foreground glow">
-          {m.isPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />} Draft reply
+          {m.isPending ? (
+            <><Loader2 className="size-4 animate-spin mr-1.5" /> {phase === "retrieving" ? "Searching memory…" : "Generating…"}</>
+          ) : (
+            <><Sparkles className="size-4 mr-1.5" /> Draft reply</>
+          )}
         </Button>
+        <p className="text-[10px] text-muted-foreground inline-flex items-center gap-1">
+          <Brain className="size-3 text-accent" /> RAG-enhanced — personalized from your AI memory
+        </p>
       </Card>
       <Card>
-        {!m.data && <p className="text-sm text-muted-foreground">Drafted reply appears here.</p>}
+        {m.isPending && (
+          <div className="space-y-2">
+            <div className="text-xs text-accent inline-flex items-center gap-1.5">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-75 animate-ping" />
+                <span className="relative inline-flex rounded-full size-2 bg-accent" />
+              </span>
+              {phase === "retrieving" ? "Searching memory…" : "Drafting email…"}
+            </div>
+            <div className="h-3 rounded bg-muted/40 animate-pulse" />
+            <div className="h-3 rounded bg-muted/40 animate-pulse w-5/6" />
+            <div className="h-3 rounded bg-muted/40 animate-pulse w-2/3" />
+          </div>
+        )}
+        {!m.isPending && !m.data && <p className="text-sm text-muted-foreground">Drafted reply appears here.</p>}
         {m.data && (
           <div className="space-y-3">
+            {showNoMemoryBanner && <NoMemoryBanner />}
+            {rag && rag.count > 0 && <RagBadge matches={rag.matches} />}
             <Section title="Subject" right={<CopyBtn text={m.data.subject} />}><p className="text-sm">{m.data.subject}</p></Section>
             <Section title="Reply" right={<CopyBtn text={m.data.reply} />}><p className="text-sm whitespace-pre-wrap">{m.data.reply}</p></Section>
           </div>
