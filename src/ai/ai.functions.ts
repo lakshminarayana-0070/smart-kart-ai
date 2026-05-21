@@ -62,12 +62,53 @@ export const generateReply = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d) => replySchema.parse(d))
   .handler(async ({ data, context }) => {
-    const user = `Tone: ${data.tone}\nOrder/context: ${data.context || "(none)"}\n\nCustomer message:\n"""${data.message}"""\n\nReturn JSON: { "reply": string, "subject": string }`;
+    const userInputs = `Tone: ${data.tone}\nOrder/context: ${data.context || "(none)"}\n\nCustomer message:\n"""${data.message}"""\n\nReturn JSON: { "reply": string, "subject": string }`;
+
+    // RAG enrichment — additive only; must never block generation.
+    let userMessage = userInputs;
+    let ragMatches: Awaited<ReturnType<typeof retrieveMemoryForUser>>["results"] = [];
+    let ragFallback = false;
+    let ragQuery: string | undefined;
+
+    if (isRagEnabled("email-composer")) {
+      ragQuery = buildSearchQuery("email composer", {
+        tone: data.tone,
+        context: data.context,
+        message: data.message.slice(0, 400),
+      });
+      const retrieval = await retrieveMemoryForUser(context.supabase, ragQuery, {
+        matchCount: 5,
+        matchThreshold: 0.5,
+      });
+      ragMatches = retrieval.results;
+      ragFallback = !!retrieval.error;
+      const formatted = formatRetrievedContext(ragMatches);
+      userMessage = buildRagPrompt({ userInputs, formattedContext: formatted });
+      console.log(
+        `[RAG] Feature: email-composer | Query: ${ragQuery} | Matches: ${ragMatches.length} | Fallback Used: ${ragFallback}`,
+      );
+    }
+
     const { data: out, tokensIn, tokensOut, model } = await chatJSON<{ reply: string; subject: string }>({
-      system: PROMPTS.customerReply, user,
+      system: PROMPTS.customerReply, user: userMessage,
     });
     await logGeneration(context.supabase, context.userId, "customer_reply", data, out, model, tokensIn, tokensOut);
-    return out;
+    return {
+      ...out,
+      _rag: {
+        used: ragMatches.length > 0,
+        count: ragMatches.length,
+        query: ragQuery ?? null,
+        fallback: ragFallback,
+        matches: ragMatches.map((m) => ({
+          id: m.id,
+          title: m.title,
+          category: m.category,
+          similarity: m.similarity,
+          content: m.content.slice(0, 280),
+        })),
+      },
+    };
   });
 
 /* ========== Marketing ========== */
