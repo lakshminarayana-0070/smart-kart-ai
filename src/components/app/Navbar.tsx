@@ -1,7 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet, Bot, Wand2, Brain, BrainCircuit } from "lucide-react";
+import { Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet, Bot, Wand2, Brain, BrainCircuit } from "lucide-react";
+import logo from "@/assets/smart-kart-logo.png";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
@@ -13,13 +14,13 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 glass border-b">
       <div className="mx-auto max-w-7xl px-4 h-16 flex items-center gap-4">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="size-8 rounded-lg bg-gradient-primary grid place-items-center glow">
-            <Sparkles className="size-4 text-primary-foreground" />
-          </div>
-          <span className="font-display font-bold text-lg tracking-tight hidden sm:block">
-            Smart Kart <span className="text-gradient">AI</span>
-          </span>
+        <Link to="/" className="flex items-center gap-2 shrink-0" aria-label="Smart Kart AI home">
+          <img
+            src={logo}
+            alt="Smart Kart AI"
+            className="h-9 w-auto object-contain drop-shadow-[0_0_18px_hsl(var(--primary)/0.35)]"
+          />
+          <span className="sr-only">Smart Kart AI</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1 ml-4">
