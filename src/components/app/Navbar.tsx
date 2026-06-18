@@ -18,7 +18,7 @@ export function Navbar() {
           <img
             src={logo}
             alt="Smart Kart AI"
-            className="h-9 w-auto object-contain drop-shadow-[0_0_18px_hsl(var(--primary)/0.35)]"
+            className="h-7 sm:h-8 w-auto object-contain drop-shadow-[0_0_14px_hsl(var(--primary)/0.45)]"
           />
           <span className="sr-only">Smart Kart AI</span>
         </Link>
