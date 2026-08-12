@@ -14,4 +14,5 @@ DO NOT build anything until user explicitly requests a phase. Memory-only intake
 - [AI systems](mem://features/ai-systems) — 7 AI subsystems: recommendation, review analysis, content gen, customer reply, budget, camera, smart search
 - [Database architecture](mem://features/database-architecture) — Entities to model when backend phase begins
 - [Future scalability roadmap](mem://features/future-roadmap) — Chatbot, voice commerce, AR, virtual try-on, dynamic pricing, trend prediction, personal shopper, fashion matching, inventory forecasting
+- [Camera Product Search](mem://features/camera-product-search) — Future vision AI camera shopping pipeline with product matching, RAG enrichment, and fallback flows
 - [Design vision](mem://design/visual-direction) — Futuristic AI aesthetic, gradients, glow, premium typography, dark/light
