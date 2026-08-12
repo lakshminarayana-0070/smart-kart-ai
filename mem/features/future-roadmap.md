@@ -13,5 +13,6 @@ Architecture must remain extensible for:
 - AI Personal Shopper
 - AI Fashion Matching
 - AI Inventory Forecasting
+- Camera Product Search (vision-based catalog matching; see mem://features/camera-product-search for full spec)
 
 Keep modules decoupled and AI calls abstracted behind a service layer so new AI capabilities slot in without refactors.
