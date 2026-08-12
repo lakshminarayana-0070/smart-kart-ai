@@ -9,29 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
-import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
-import { Route as AuthenticatedShoppingMemoryRouteImport } from './routes/_authenticated/shopping-memory'
-import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
-import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
-import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
-import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
-import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
-import { Route as AuthenticatedCameraRouteImport } from './routes/_authenticated/camera'
-import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
-import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
+import { Route as AuthenticatedBudgetRouteImport } from './routes/_authenticated/budget'
+import { Route as AuthenticatedCameraRouteImport } from './routes/_authenticated/camera'
+import { Route as AuthenticatedCartRouteImport } from './routes/_authenticated/cart'
+import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
+import { Route as AuthenticatedOrdersRouteImport } from './routes/_authenticated/orders'
+import { Route as AuthenticatedSearchRouteImport } from './routes/_authenticated/search'
+import { Route as AuthenticatedShoppingMemoryRouteImport } from './routes/_authenticated/shopping-memory'
+import { Route as AuthenticatedStudioRouteImport } from './routes/_authenticated/studio'
+import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
 import { Route as AuthenticatedProductSlugRouteImport } from './routes/_authenticated/product.$slug'
+import { Route as ApiAiChatRouteImport } from './routes/api/ai.chat'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -39,23 +43,59 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedWishlistRoute = AuthenticatedWishlistRouteImport.update({
-  id: '/wishlist',
-  path: '/wishlist',
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
-  id: '/studio',
-  path: '/studio',
+const AuthenticatedBudgetRoute = AuthenticatedBudgetRouteImport.update({
+  id: '/budget',
+  path: '/budget',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCameraRoute = AuthenticatedCameraRouteImport.update({
+  id: '/camera',
+  path: '/camera',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedShoppingMemoryRoute =
@@ -64,60 +104,15 @@ const AuthenticatedShoppingMemoryRoute =
     path: '/shopping-memory',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedSearchRoute = AuthenticatedSearchRouteImport.update({
-  id: '/search',
-  path: '/search',
+const AuthenticatedStudioRoute = AuthenticatedStudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedOrdersRoute = AuthenticatedOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
+const AuthenticatedWishlistRoute = AuthenticatedWishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
   getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
-  id: '/knowledge',
-  path: '/knowledge',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedCartRoute = AuthenticatedCartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedCameraRoute = AuthenticatedCameraRouteImport.update({
-  id: '/camera',
-  path: '/camera',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedBudgetRoute = AuthenticatedBudgetRouteImport.update({
-  id: '/budget',
-  path: '/budget',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
-  id: '/assistant',
-  path: '/assistant',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const ApiAiChatRoute = ApiAiChatRouteImport.update({
-  id: '/api/ai/chat',
-  path: '/api/ai/chat',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedProductSlugRoute =
   AuthenticatedProductSlugRouteImport.update({
@@ -125,6 +120,11 @@ const AuthenticatedProductSlugRoute =
     path: '/product/$slug',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const ApiAiChatRoute = ApiAiChatRouteImport.update({
+  id: '/api/ai/chat',
+  path: '/api/ai/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -262,18 +262,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -283,88 +276,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/wishlist': {
-      id: '/_authenticated/wishlist'
-      path: '/wishlist'
-      fullPath: '/wishlist'
-      preLoaderRoute: typeof AuthenticatedWishlistRouteImport
-      parentRoute: typeof AuthenticatedRoute
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/studio': {
-      id: '/_authenticated/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof AuthenticatedStudioRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/shopping-memory': {
-      id: '/_authenticated/shopping-memory'
-      path: '/shopping-memory'
-      fullPath: '/shopping-memory'
-      preLoaderRoute: typeof AuthenticatedShoppingMemoryRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/search': {
-      id: '/_authenticated/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof AuthenticatedSearchRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/orders': {
-      id: '/_authenticated/orders'
-      path: '/orders'
-      fullPath: '/orders'
-      preLoaderRoute: typeof AuthenticatedOrdersRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/knowledge': {
-      id: '/_authenticated/knowledge'
-      path: '/knowledge'
-      fullPath: '/knowledge'
-      preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/home': {
-      id: '/_authenticated/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof AuthenticatedHomeRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/checkout': {
-      id: '/_authenticated/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/cart': {
-      id: '/_authenticated/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof AuthenticatedCartRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/camera': {
-      id: '/_authenticated/camera'
-      path: '/camera'
-      fullPath: '/camera'
-      preLoaderRoute: typeof AuthenticatedCameraRouteImport
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/budget': {
@@ -374,11 +304,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBudgetRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/assistant': {
-      id: '/_authenticated/assistant'
-      path: '/assistant'
-      fullPath: '/assistant'
-      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
+    '/_authenticated/camera': {
+      id: '/_authenticated/camera'
+      path: '/camera'
+      fullPath: '/camera'
+      preLoaderRoute: typeof AuthenticatedCameraRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/cart': {
+      id: '/_authenticated/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AuthenticatedCartRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/checkout': {
+      id: '/_authenticated/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/knowledge': {
+      id: '/_authenticated/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/orders': {
+      id: '/_authenticated/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof AuthenticatedOrdersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/search': {
+      id: '/_authenticated/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AuthenticatedSearchRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/shopping-memory': {
+      id: '/_authenticated/shopping-memory'
+      path: '/shopping-memory'
+      fullPath: '/shopping-memory'
+      preLoaderRoute: typeof AuthenticatedShoppingMemoryRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/studio': {
+      id: '/_authenticated/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof AuthenticatedStudioRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/wishlist': {
+      id: '/_authenticated/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof AuthenticatedWishlistRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/product/$slug': {
+      id: '/_authenticated/product/$slug'
+      path: '/product/$slug'
+      fullPath: '/product/$slug'
+      preLoaderRoute: typeof AuthenticatedProductSlugRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/api/ai/chat': {
@@ -387,13 +394,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/ai/chat'
       preLoaderRoute: typeof ApiAiChatRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/product/$slug': {
-      id: '/_authenticated/product/$slug'
-      path: '/product/$slug'
-      fullPath: '/product/$slug'
-      preLoaderRoute: typeof AuthenticatedProductSlugRouteImport
-      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
@@ -446,13 +446,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

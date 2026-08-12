@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ShieldCheck, Sparkles } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { placeOrderFn } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/_authenticated/checkout")({
   head: () => ({ meta: [{ title: "Checkout — Smart Kart AI" }] }),
@@ -31,21 +33,22 @@ function Checkout() {
   const discount = coupon.toUpperCase() === "AI10" ? subtotal * 0.1 : 0;
   const total = subtotal - discount;
 
+  const placeOrder = useServerFn(placeOrderFn);
+
   const place = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!items || items.length === 0) return toast.error("Cart is empty");
     setPlacing(true);
-    const { data: order, error } = await supabase.from("orders").insert({
-      user_id: user!.id, total, status: "confirmed",
-      shipping_address: { name, address, city },
-    }).select().single();
-    if (error || !order) { setPlacing(false); return toast.error(error?.message ?? "Failed"); }
-    await supabase.from("order_items").insert(items.map((i: any) => ({
-      order_id: order.id, product_id: i.product.id, quantity: i.quantity, price: i.product.price,
-    })));
-    await supabase.from("cart_items").delete().eq("user_id", user!.id);
-    toast.success("Order placed!");
-    nav({ to: "/orders" });
+    try {
+      // Prices, discounts and totals are recomputed server-side from the products table.
+      await placeOrder({ data: { coupon, shipping: { name, address, city } } });
+      toast.success("Order placed!");
+      nav({ to: "/orders" });
+    } catch {
+      toast.error("Could not place order");
+    } finally {
+      setPlacing(false);
+    }
   };
 
   return (
