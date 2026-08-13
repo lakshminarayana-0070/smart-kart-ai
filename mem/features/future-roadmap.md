@@ -15,4 +15,7 @@ Architecture must remain extensible for:
 - AI Inventory Forecasting
 - Camera Product Search (vision-based catalog matching; see mem://features/camera-product-search for full spec)
 
+Implementation phases to track:
+- Group 1 — Product Foundation (product catalog, seller product management, product detail experience; see mem://features/group-1-product-foundation for full spec)
+
 Keep modules decoupled and AI calls abstracted behind a service layer so new AI capabilities slot in without refactors.
