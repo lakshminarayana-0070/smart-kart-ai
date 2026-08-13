@@ -15,4 +15,5 @@ DO NOT build anything until user explicitly requests a phase. Memory-only intake
 - [Database architecture](mem://features/database-architecture) — Entities to model when backend phase begins
 - [Future scalability roadmap](mem://features/future-roadmap) — Chatbot, voice commerce, AR, virtual try-on, dynamic pricing, trend prediction, personal shopper, fashion matching, inventory forecasting
 - [Camera Product Search](mem://features/camera-product-search) — Future vision AI camera shopping pipeline with product matching, RAG enrichment, and fallback flows
+- [Group 1 — Product Foundation](mem://features/group-1-product-foundation) — Product Catalog + Seller Product Management + Product Detail Experience
 - [Design vision](mem://design/visual-direction) — Futuristic AI aesthetic, gradients, glow, premium typography, dark/light
