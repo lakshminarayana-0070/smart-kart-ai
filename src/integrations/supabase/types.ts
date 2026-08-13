@@ -153,6 +153,7 @@ export type Database = {
           icon: string | null
           id: string
           name: string
+          parent_id: string | null
           slug: string
         }
         Insert: {
@@ -160,6 +161,7 @@ export type Database = {
           icon?: string | null
           id?: string
           name: string
+          parent_id?: string | null
           slug: string
         }
         Update: {
@@ -167,9 +169,18 @@ export type Database = {
           icon?: string | null
           id?: string
           name?: string
+          parent_id?: string | null
           slug?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       order_items: {
         Row: {
@@ -243,10 +254,13 @@ export type Database = {
           ai_pros: Json | null
           ai_summary: string | null
           ai_trust_score: number | null
+          brand: string | null
           category_id: string | null
           compare_at_price: number | null
           created_at: string
+          currency: string
           description: string | null
+          features: Json
           id: string
           image_url: string | null
           images: Json | null
@@ -256,19 +270,28 @@ export type Database = {
           price: number
           rating: number | null
           review_count: number | null
+          seller_id: string | null
+          sku: string | null
           slug: string
+          specifications: Json
+          status: string
           stock: number | null
+          subcategory_id: string | null
           tags: Json | null
+          updated_at: string
         }
         Insert: {
           ai_cons?: Json | null
           ai_pros?: Json | null
           ai_summary?: string | null
           ai_trust_score?: number | null
+          brand?: string | null
           category_id?: string | null
           compare_at_price?: number | null
           created_at?: string
+          currency?: string
           description?: string | null
+          features?: Json
           id?: string
           image_url?: string | null
           images?: Json | null
@@ -278,19 +301,28 @@ export type Database = {
           price: number
           rating?: number | null
           review_count?: number | null
+          seller_id?: string | null
+          sku?: string | null
           slug: string
+          specifications?: Json
+          status?: string
           stock?: number | null
+          subcategory_id?: string | null
           tags?: Json | null
+          updated_at?: string
         }
         Update: {
           ai_cons?: Json | null
           ai_pros?: Json | null
           ai_summary?: string | null
           ai_trust_score?: number | null
+          brand?: string | null
           category_id?: string | null
           compare_at_price?: number | null
           created_at?: string
+          currency?: string
           description?: string | null
+          features?: Json
           id?: string
           image_url?: string | null
           images?: Json | null
@@ -300,14 +332,27 @@ export type Database = {
           price?: number
           rating?: number | null
           review_count?: number | null
+          seller_id?: string | null
+          sku?: string | null
           slug?: string
+          specifications?: Json
+          status?: string
           stock?: number | null
+          subcategory_id?: string | null
           tags?: Json | null
+          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "products_category_id_fkey"
             columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id"]
