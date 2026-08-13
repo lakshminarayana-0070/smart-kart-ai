@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ShoppingBag, Heart, Search, Sparkles } from "lucide-react";
+import { ShoppingBag, Heart, Search, Sparkles, Package } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Smart Kart AI" }] }),
@@ -45,6 +45,11 @@ function Dashboard() {
           </Link>
         ))}
       </div>
+      <Link to="/seller/products" className="block rounded-2xl bg-gradient-card border p-6 hover:border-primary/40 hover:glow transition">
+        <Package className="size-6 text-accent mb-3" />
+        <div className="font-semibold">Sell on Smart Kart AI</div>
+        <div className="text-sm text-muted-foreground">Add, edit and publish your own products.</div>
+      </Link>
     </div>
   );
 }
