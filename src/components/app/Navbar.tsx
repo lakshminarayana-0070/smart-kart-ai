@@ -57,6 +57,7 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem onClick={() => navigate({ to: "/dashboard" })}>Dashboard</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/seller/products" })}>My products</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate({ to: "/shopping-memory" })}>Shopping Memory</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate({ to: "/wishlist" })}>Wishlist</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate({ to: "/orders" })}>Orders</DropdownMenuItem>
