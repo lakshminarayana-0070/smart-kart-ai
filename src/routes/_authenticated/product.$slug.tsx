@@ -22,6 +22,7 @@ function PDP() {
     queryKey: ["product", slug],
     queryFn: async () => (await supabase.from("products").select("*").eq("slug", slug).maybeSingle()).data as any,
   });
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   const { data: similar } = useQuery({
     queryKey: ["similar", product?.category_id],
@@ -38,7 +39,21 @@ function PDP() {
     }
   }, [product, user]);
 
-  if (!product) return <div className="mx-auto max-w-7xl px-4 py-12 text-muted-foreground">Loading…</div>;
+  if (product === undefined) return <div className="mx-auto max-w-7xl px-4 py-12 text-muted-foreground">Loading…</div>;
+  if (!product) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-20 text-center">
+        <h1 className="text-2xl font-bold mb-2">Product not found</h1>
+        <p className="text-muted-foreground mb-6">This product may have been removed or unpublished.</p>
+        <Link to="/home"><Button className="bg-gradient-primary text-primary-foreground">Back to shopping</Button></Link>
+      </div>
+    );
+  }
+
+  const gallery: string[] = [product.image_url, ...(Array.isArray(product.images) ? product.images : [])].filter(Boolean);
+  const mainImage = activeImage ?? gallery[0] ?? null;
+  const inStock = (product.stock ?? 0) > 0 && product.status !== "inactive";
+  const cur = product.currency === "INR" ? "₹" : "$";
 
   const addToCart = async () => {
     if (!user) return;
@@ -54,12 +69,25 @@ function PDP() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="grid lg:grid-cols-2 gap-8">
-        <div className="rounded-3xl overflow-hidden bg-gradient-card border aspect-square">
-          {product.image_url && <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />}
+        <div className="space-y-3">
+          <div className="rounded-3xl overflow-hidden bg-gradient-card border aspect-square">
+            {mainImage && <img src={mainImage} alt={product.name} className="w-full h-full object-cover" />}
+          </div>
+          {gallery.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto">
+              {gallery.map((src) => (
+                <button key={src} onClick={() => setActiveImage(src)}
+                  className={`size-16 rounded-xl overflow-hidden border shrink-0 ${src === mainImage ? "border-primary" : ""}`}>
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
         <div className="space-y-5">
           <div className="text-xs uppercase tracking-widest text-accent flex items-center gap-1"><Sparkles className="size-3" /> AI verified</div>
           <h1 className="text-3xl md:text-4xl font-bold">{product.name}</h1>
+          {product.brand && <div className="text-sm text-muted-foreground -mt-3">by {product.brand}</div>}
           <div className="flex items-center gap-3 text-sm">
             <div className="flex items-center gap-1">
               <Star className="size-4 fill-accent text-accent" />
@@ -72,13 +100,16 @@ function PDP() {
           </div>
           <p className="text-muted-foreground">{product.description}</p>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold">${Number(product.price).toFixed(2)}</span>
-            {product.compare_at_price && <span className="text-lg line-through text-muted-foreground">${Number(product.compare_at_price).toFixed(2)}</span>}
+            <span className="text-3xl font-bold">{cur}{Number(product.price).toFixed(2)}</span>
+            {product.compare_at_price && <span className="text-lg line-through text-muted-foreground">{cur}{Number(product.compare_at_price).toFixed(2)}</span>}
+          </div>
+          <div className={`text-sm ${inStock ? "text-accent" : "text-destructive"}`}>
+            {inStock ? `In stock · ${product.stock} available` : "Currently unavailable"}
           </div>
 
           <div className="flex gap-2">
-            <Button onClick={addToCart} className="flex-1 h-12 bg-gradient-primary text-primary-foreground glow">
-              <ShoppingCart className="size-4" /> Add to cart
+            <Button onClick={addToCart} disabled={!inStock} className="flex-1 h-12 bg-gradient-primary text-primary-foreground glow">
+              <ShoppingCart className="size-4" /> {inStock ? "Add to cart" : "Unavailable"}
             </Button>
             <Button onClick={addToWishlist} variant="outline" size="icon" className="size-12 glass">
               <Heart className="size-5" />
@@ -88,6 +119,29 @@ function PDP() {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Truck className="size-4 text-accent" /> Free delivery · estimated 2–4 days
           </div>
+
+          {Array.isArray(product.features) && product.features.length > 0 && (
+            <div className="rounded-2xl bg-gradient-card border p-5">
+              <div className="text-sm font-semibold mb-2">Key features</div>
+              <ul className="space-y-1 text-sm text-muted-foreground">
+                {product.features.map((f: string, i: number) => <li key={i}>· {f}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {product.specifications && Object.keys(product.specifications).length > 0 && (
+            <div className="rounded-2xl bg-gradient-card border p-5">
+              <div className="text-sm font-semibold mb-3">Specifications</div>
+              <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                {Object.entries(product.specifications as Record<string, string>).map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-3 border-b border-border/40 py-1">
+                    <dt className="text-muted-foreground">{k}</dt>
+                    <dd className="text-right">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )}
 
           {/* AI Review Summary */}
           <div className="rounded-2xl glass ai-border p-5 mt-4">
