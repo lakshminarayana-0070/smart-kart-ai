@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ProductCard, type Product } from "@/components/app/ProductCard";
 import { toast } from "sonner";
+import { formatPrice, normalizeCurrency } from "@/lib/currency";
+import { useCurrency } from "@/contexts/CurrencyContext";
 
 export const Route = createFileRoute("/_authenticated/product/$slug")({
   head: ({ params }) => ({ meta: [{ title: `${params.slug} — Smart Kart AI` }] }),
@@ -17,6 +19,7 @@ function PDP() {
   const { slug } = Route.useParams();
   const { user } = useAuth();
   const qc = useQueryClient();
+  const { currency: preferred } = useCurrency();
 
   const { data: product } = useQuery({
     queryKey: ["product", slug],
@@ -53,7 +56,7 @@ function PDP() {
   const gallery: string[] = [product.image_url, ...(Array.isArray(product.images) ? product.images : [])].filter(Boolean);
   const mainImage = activeImage ?? gallery[0] ?? null;
   const inStock = (product.stock ?? 0) > 0 && product.status !== "inactive";
-  const cur = product.currency === "INR" ? "₹" : "$";
+  const productCurrency = normalizeCurrency(product.currency, "USD");
 
   const addToCart = async () => {
     if (!user) return;
@@ -100,9 +103,18 @@ function PDP() {
           </div>
           <p className="text-muted-foreground">{product.description}</p>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold">{cur}{Number(product.price).toFixed(2)}</span>
-            {product.compare_at_price && <span className="text-lg line-through text-muted-foreground">{cur}{Number(product.compare_at_price).toFixed(2)}</span>}
+            <span className="text-3xl font-bold">{formatPrice(product.price, productCurrency)}</span>
+            {product.compare_at_price && (
+              <span className="text-lg line-through text-muted-foreground">
+                {formatPrice(product.compare_at_price, productCurrency)}
+              </span>
+            )}
           </div>
+          {productCurrency !== preferred && (
+            <div className="text-xs text-muted-foreground -mt-3">
+              Listed by the seller in {productCurrency}. Conversion to {preferred} isn't available yet — you'll be charged in {productCurrency}.
+            </div>
+          )}
           <div className={`text-sm ${inStock ? "text-accent" : "text-destructive"}`}>
             {inStock ? `In stock · ${product.stock} available` : "Currently unavailable"}
           </div>

@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Trash2, Sparkles, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { formatPrice, normalizeCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/_authenticated/cart")({
   head: () => ({ meta: [{ title: "Cart — Smart Kart AI" }] }),
@@ -22,6 +23,7 @@ function CartPage() {
   });
 
   const total = (items ?? []).reduce((s: number, i: any) => s + Number(i.product.price) * i.quantity, 0);
+  const cartCurrency = normalizeCurrency((items ?? [])[0]?.product?.currency, "USD");
 
   const update = async (id: string, q: number) => {
     if (q <= 0) await supabase.from("cart_items").delete().eq("id", id);
@@ -45,7 +47,7 @@ function CartPage() {
                 <img src={i.product.image_url} className="size-20 rounded-xl object-cover" />
                 <div className="flex-1">
                   <div className="font-medium">{i.product.name}</div>
-                  <div className="text-sm text-muted-foreground">${Number(i.product.price).toFixed(2)}</div>
+                  <div className="text-sm text-muted-foreground">{formatPrice(i.product.price, i.product.currency)}</div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button size="icon" variant="outline" className="size-8" onClick={() => update(i.id, i.quantity - 1)}><Minus className="size-3" /></Button>
@@ -57,11 +59,11 @@ function CartPage() {
             ))}
             <div className="rounded-2xl glass ai-border p-4 flex items-center gap-3">
               <Sparkles className="size-4 text-accent" />
-              <span className="text-sm">AI suggestion: Add ${(50 - total).toFixed(2)} more for free shipping bundle.</span>
+              <span className="text-sm">AI suggestion: Add {formatPrice(Math.max(50 - total, 0), cartCurrency)} more for free shipping bundle.</span>
             </div>
           </div>
           <div className="rounded-2xl bg-gradient-card border p-6 h-fit space-y-4">
-            <div className="flex justify-between"><span>Subtotal</span><span className="font-bold">${total.toFixed(2)}</span></div>
+            <div className="flex justify-between"><span>Subtotal</span><span className="font-bold">{formatPrice(total, cartCurrency)}</span></div>
             <div className="flex justify-between text-sm text-muted-foreground"><span>Shipping</span><span>Free</span></div>
             <Button onClick={() => nav({ to: "/checkout" })} className="w-full h-11 bg-gradient-primary text-primary-foreground glow">Checkout</Button>
           </div>

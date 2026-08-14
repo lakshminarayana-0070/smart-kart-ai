@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, Upload, ImageOff } from "lucide-react";
 import { productInputSchema, type ProductInput } from "@/lib/products.schema";
+import { CURRENCIES, CURRENCY_CODES } from "@/lib/currency";
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
@@ -227,8 +228,15 @@ export function ProductForm({
           </div>
           <div>
             <Label>Currency</Label>
-            <Input value={v.currency} maxLength={3}
-              onChange={(e) => set("currency", e.target.value.toUpperCase())} />
+            <select
+              value={v.currency}
+              onChange={(e) => set("currency", e.target.value)}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
+              {CURRENCY_CODES.map((c) => (
+                <option key={c} value={c}>{CURRENCIES[c].symbol} {c} — {CURRENCIES[c].label}</option>
+              ))}
+            </select>
             {err("currency")}
           </div>
           <div>

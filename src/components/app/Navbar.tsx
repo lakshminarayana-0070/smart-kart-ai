@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Search, ShoppingCart, Heart, User, LogOut, Camera, Wallet, Bot, Wand2, Brain, BrainCircuit } from "lucide-react";
 import logo from "@/assets/smart-kart-logo.png";
+import { CurrencySelector } from "@/components/app/CurrencySelector";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
@@ -43,6 +44,7 @@ export function Navbar() {
         </button>
 
         <div className="flex items-center gap-1">
+          <CurrencySelector />
           {user ? (
             <>
               <Button variant="ghost" size="icon" onClick={() => navigate({ to: "/wishlist" })}>

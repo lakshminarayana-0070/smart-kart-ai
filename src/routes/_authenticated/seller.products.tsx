@@ -5,6 +5,7 @@ import { listMyProductsFn, setProductStatusFn } from "@/lib/products.functions";
 import { Button } from "@/components/ui/button";
 import { Plus, Package, Pencil, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { formatPrice } from "@/lib/currency";
 
 export const Route = createFileRoute("/_authenticated/seller/products")({
   head: () => ({
@@ -70,7 +71,7 @@ function SellerProducts() {
             <div className="flex-1 min-w-[160px]">
               <div className="font-medium">{p.name}</div>
               <div className="text-xs text-muted-foreground">
-                {p.brand ? `${p.brand} · ` : ""}{p.currency ?? "USD"} {Number(p.price).toFixed(2)} · stock {p.stock}
+                {p.brand ? `${p.brand} · ` : ""}{formatPrice(p.price, p.currency)} · stock {p.stock}
               </div>
             </div>
             <span className={`text-[11px] px-2 py-1 rounded-full ${p.status === "active" ? "bg-accent/15 text-accent" : "bg-muted text-muted-foreground"}`}>
