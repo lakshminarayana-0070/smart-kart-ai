@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Sparkles, Star } from "lucide-react";
+import { formatPrice } from "@/lib/currency";
 
 export type Product = {
   id: string;
@@ -12,6 +13,7 @@ export type Product = {
   review_count: number | null;
   ai_trust_score?: number | null;
   is_trending?: boolean | null;
+  currency?: string | null;
 };
 
 export function ProductCard({ p }: { p: Product }) {
@@ -52,9 +54,9 @@ export function ProductCard({ p }: { p: Product }) {
           )}
         </div>
         <div className="flex items-baseline gap-2">
-          <span className="text-lg font-bold">${p.price.toFixed(2)}</span>
+          <span className="text-lg font-bold">{formatPrice(p.price, p.currency)}</span>
           {p.compare_at_price && (
-            <span className="text-xs line-through text-muted-foreground">${p.compare_at_price.toFixed(2)}</span>
+            <span className="text-xs line-through text-muted-foreground">{formatPrice(p.compare_at_price, p.currency)}</span>
           )}
         </div>
       </div>
