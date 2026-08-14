@@ -50,9 +50,20 @@ function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boole
   );
 }
 
+function isAbortError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const e = error as { name?: string; code?: string; message?: string; cause?: unknown };
+  if (e.code === "ECONNRESET" || e.name === "AbortError") return true;
+  if (typeof e.message === "string" && /aborted|ECONNRESET/i.test(e.message)) return true;
+  return e.cause ? isAbortError(e.cause) : false;
+}
+
 // h3 swallows in-handler throws into a normal 500 Response with body
 // {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
-async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
+async function normalizeCatastrophicSsrResponse(
+  response: Response,
+  request: Request,
+): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
@@ -62,7 +73,12 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
     return response;
   }
 
-  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  const captured = consumeLastCapturedError();
+  // The client went away mid-render — not an app failure, don't log or render an error page.
+  if (request.signal.aborted || isAbortError(captured)) {
+    return new Response(null, { status: 499 });
+  }
+  console.error(captured ?? new Error(`h3 swallowed SSR error: ${body}`));
   return brandedErrorResponse();
 }
 
@@ -71,8 +87,11 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      return await normalizeCatastrophicSsrResponse(response, request);
     } catch (error) {
+      if (request.signal.aborted || isAbortError(error)) {
+        return new Response(null, { status: 499 });
+      }
       console.error(error);
       return brandedErrorResponse();
     }
