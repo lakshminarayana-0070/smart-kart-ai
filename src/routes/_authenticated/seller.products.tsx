@@ -5,6 +5,7 @@ import { listMyProductsFn, setProductStatusFn } from "@/lib/products.functions";
 import { Button } from "@/components/ui/button";
 import { Plus, Package, Pencil, Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { formatPrice } from "@/lib/currency";
 
 export const Route = createFileRoute("/_authenticated/seller/products")({
   head: () => ({
