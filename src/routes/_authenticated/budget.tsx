@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ProductCard, type Product } from "@/components/app/ProductCard";
+import { formatPrice, normalizeCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/_authenticated/budget")({
   head: () => ({ meta: [{ title: "Budget AI — Smart Kart AI" }] }),
@@ -25,7 +26,8 @@ function BudgetPage() {
       // greedy bundle
       const picked: Product[] = []; let total = 0;
       for (const p of all) { if (total + Number(p.price) <= submitted!) { picked.push(p); total += Number(p.price); } if (picked.length >= 5) break; }
-      return { picked, total, alternatives: all.slice(0, 8) };
+      const currency = normalizeCurrency((all[0] as any)?.currency, "USD");
+      return { picked, total, alternatives: all.slice(0, 8), currency };
     },
   });
 
@@ -38,7 +40,7 @@ function BudgetPage() {
         <form onSubmit={(e) => { e.preventDefault(); setSubmitted(Number(budget)); }} className="flex gap-2 max-w-md">
           <div className="relative flex-1">
             <Wallet className="size-4 absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
-            <Input type="number" min="10" placeholder="Enter your budget in USD" value={budget} onChange={(e) => setBudget(e.target.value)} className="h-12 pl-11" />
+            <Input type="number" min="10" placeholder="Enter your budget" value={budget} onChange={(e) => setBudget(e.target.value)} className="h-12 pl-11" />
           </div>
           <Button type="submit" className="h-12 px-6 bg-gradient-primary text-primary-foreground glow">Optimize</Button>
         </form>
@@ -50,8 +52,10 @@ function BudgetPage() {
             <>
               <div className="rounded-2xl glass ai-border p-5">
                 <div className="text-xs uppercase tracking-widest text-accent mb-1">AI Bundle</div>
-                <div className="text-lg font-bold">Best-value bundle for ${submitted}</div>
-                <div className="text-sm text-muted-foreground">Selected {bundle?.picked.length} items · total ${bundle?.total.toFixed(2)} · saves ${(submitted - (bundle?.total ?? 0)).toFixed(2)}</div>
+                <div className="text-lg font-bold">Best-value bundle for {formatPrice(submitted, bundle?.currency)}</div>
+                <div className="text-sm text-muted-foreground">
+                  Selected {bundle?.picked.length} items · total {formatPrice(bundle?.total, bundle?.currency)} · saves {formatPrice(submitted - (bundle?.total ?? 0), bundle?.currency)}
+                </div>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {(bundle?.picked ?? []).map((p) => <ProductCard key={p.id} p={p} />)}
