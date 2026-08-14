@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { Loader2, Plus, Trash2, Upload, ImageOff } from "lucide-react";
 import { productInputSchema, type ProductInput } from "@/lib/products.schema";
+import { CURRENCIES, CURRENCY_CODES } from "@/lib/currency";
 
 const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
 
