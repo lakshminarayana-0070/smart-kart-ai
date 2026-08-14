@@ -6,6 +6,7 @@ Two core modules: (1) Customer AI Commerce Platform, (2) AI Seller & Admin Intel
 Stack: React + TypeScript + Tailwind + TanStack Start + Lovable Cloud (Supabase/Postgres) + OpenAI/Lovable AI Gateway + vector search.
 Design: futuristic, premium gradients, AI glow effects, minimal, dark/light ready, smooth animations. Never generic ecommerce look.
 DO NOT build anything until user explicitly requests a phase. Memory-only intake right now.
+All customer-facing prices go through ONE shared currency formatter (Intl.NumberFormat). Default INR (₹). Never fake exchange-rate conversion.
 
 ## Memories
 - [Project vision & scope](mem://features/smart-kart-ai-overview) — Vision, tone, treat-as rules, non-goals
@@ -16,4 +17,5 @@ DO NOT build anything until user explicitly requests a phase. Memory-only intake
 - [Future scalability roadmap](mem://features/future-roadmap) — Chatbot, voice commerce, AR, virtual try-on, dynamic pricing, trend prediction, personal shopper, fashion matching, inventory forecasting
 - [Camera Product Search](mem://features/camera-product-search) — Future vision AI camera shopping pipeline with product matching, RAG enrichment, and fallback flows
 - [Group 1 — Product Foundation](mem://features/group-1-product-foundation) — Product Catalog + Seller Product Management + Product Detail Experience
+- [Product Search & International Pricing](mem://features/product-search-and-pricing) — Fix "0 products found" search pipeline, ranking, shared INR/USD/EUR/GBP price formatter, currency selector
 - [Design vision](mem://design/visual-direction) — Futuristic AI aesthetic, gradients, glow, premium typography, dark/light
