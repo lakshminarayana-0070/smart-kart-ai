@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { ShieldCheck, Sparkles } from "lucide-react";
+import { formatPrice, normalizeCurrency } from "@/lib/currency";
 import { useServerFn } from "@tanstack/react-start";
 import { placeOrderFn } from "@/lib/checkout.functions";
 
@@ -30,6 +31,7 @@ function Checkout() {
     queryFn: async () => (await supabase.from("cart_items").select("id,quantity,product:products(*)").eq("user_id", user!.id)).data ?? [],
   });
   const subtotal = (items ?? []).reduce((s: number, i: any) => s + Number(i.product.price) * i.quantity, 0);
+  const cartCurrency = normalizeCurrency((items ?? [])[0]?.product?.currency, "USD");
   const discount = coupon.toUpperCase() === "AI10" ? subtotal * 0.1 : 0;
   const total = subtotal - discount;
 
@@ -74,12 +76,12 @@ function Checkout() {
         </div>
         <div className="rounded-2xl bg-gradient-card border ai-border p-6 h-fit space-y-3">
           <h2 className="font-semibold">Order summary</h2>
-          <div className="flex justify-between text-sm"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
+          <div className="flex justify-between text-sm"><span>Subtotal</span><span>{formatPrice(subtotal, cartCurrency)}</span></div>
           <div className="flex gap-2">
             <Input placeholder="Coupon (try AI10)" value={coupon} onChange={(e) => setCoupon(e.target.value)} className="h-9" />
           </div>
-          {discount > 0 && <div className="flex justify-between text-sm text-accent"><span><Sparkles className="size-3 inline" /> AI10 applied</span><span>-${discount.toFixed(2)}</span></div>}
-          <div className="flex justify-between font-bold pt-2 border-t"><span>Total</span><span>${total.toFixed(2)}</span></div>
+          {discount > 0 && <div className="flex justify-between text-sm text-accent"><span><Sparkles className="size-3 inline" /> AI10 applied</span><span>-{formatPrice(discount, cartCurrency)}</span></div>}
+          <div className="flex justify-between font-bold pt-2 border-t"><span>Total</span><span>{formatPrice(total, cartCurrency)}</span></div>
           <Button type="submit" disabled={placing} className="w-full h-11 bg-gradient-primary text-primary-foreground glow">
             {placing ? "Placing…" : "Place order"}
           </Button>
