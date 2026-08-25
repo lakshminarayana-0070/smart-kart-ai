@@ -7,6 +7,8 @@ Stack: React + TypeScript + Tailwind + TanStack Start + Lovable Cloud (Supabase/
 Design: futuristic, premium gradients, AI glow effects, minimal, dark/light ready, smooth animations. Never generic ecommerce look.
 DO NOT build anything until user explicitly requests a phase. Memory-only intake right now.
 All customer-facing prices go through ONE shared currency formatter (Intl.NumberFormat). Default INR (₹). Never fake exchange-rate conversion.
+Existing system — inspect and reuse before adding. No duplicate tables/functions/routes, no redesigns, no weakening RLS, small controlled changes.
+Follow the fixed 11-phase development order; never jump phases.
 
 ## Memories
 - [Project vision & scope](mem://features/smart-kart-ai-overview) — Vision, tone, treat-as rules, non-goals
@@ -19,3 +21,5 @@ All customer-facing prices go through ONE shared currency formatter (Intl.Number
 - [Group 1 — Product Foundation](mem://features/group-1-product-foundation) — Product Catalog + Seller Product Management + Product Detail Experience
 - [Product Search & International Pricing](mem://features/product-search-and-pricing) — Fix "0 products found" search pipeline, ranking, shared INR/USD/EUR/GBP price formatter, currency selector
 - [Design vision](mem://design/visual-direction) — Futuristic AI aesthetic, gradients, glow, premium typography, dark/light
+- [Day 1 audit baseline](mem://features/audit-baseline-day1) — Verified feature status, known issues, blockers, fixed phase order
+- [Development rules](mem://preferences/development-rules) — Inspect-first, reuse, no duplicates, small controlled changes
