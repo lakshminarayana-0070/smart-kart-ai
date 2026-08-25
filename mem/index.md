@@ -21,3 +21,5 @@ Follow the fixed 11-phase development order; never jump phases.
 - [Group 1 — Product Foundation](mem://features/group-1-product-foundation) — Product Catalog + Seller Product Management + Product Detail Experience
 - [Product Search & International Pricing](mem://features/product-search-and-pricing) — Fix "0 products found" search pipeline, ranking, shared INR/USD/EUR/GBP price formatter, currency selector
 - [Design vision](mem://design/visual-direction) — Futuristic AI aesthetic, gradients, glow, premium typography, dark/light
+- [Day 1 audit baseline](mem://features/audit-baseline-day1) — Verified feature status, known issues, blockers, fixed phase order
+- [Development rules](mem://preferences/development-rules) — Inspect-first, reuse, no duplicates, small controlled changes
