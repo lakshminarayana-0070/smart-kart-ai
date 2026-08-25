@@ -228,6 +228,7 @@ export type Database = {
           shipping_address: Json | null
           status: string
           total: number
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -236,6 +237,7 @@ export type Database = {
           shipping_address?: Json | null
           status?: string
           total: number
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -244,6 +246,7 @@ export type Database = {
           shipping_address?: Json | null
           status?: string
           total?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -415,6 +418,50 @@ export type Database = {
           },
         ]
       }
+      reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          is_verified_purchase: boolean
+          product_id: string
+          rating: number
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_verified_purchase?: boolean
+          product_id: string
+          rating: number
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          is_verified_purchase?: boolean
+          product_id?: string
+          rating?: number
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       search_history: {
         Row: {
           created_at: string
@@ -433,6 +480,39 @@ export type Database = {
           id?: string
           query?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      seller_profiles: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          logo_url: string | null
+          store_name: string
+          store_slug: string | null
+          support_email: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id: string
+          logo_url?: string | null
+          store_name: string
+          store_slug?: string | null
+          support_email?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          store_name?: string
+          store_slug?: string | null
+          support_email?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
