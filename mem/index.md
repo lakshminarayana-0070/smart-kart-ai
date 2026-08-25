@@ -7,6 +7,8 @@ Stack: React + TypeScript + Tailwind + TanStack Start + Lovable Cloud (Supabase/
 Design: futuristic, premium gradients, AI glow effects, minimal, dark/light ready, smooth animations. Never generic ecommerce look.
 DO NOT build anything until user explicitly requests a phase. Memory-only intake right now.
 All customer-facing prices go through ONE shared currency formatter (Intl.NumberFormat). Default INR (₹). Never fake exchange-rate conversion.
+Existing system — inspect and reuse before adding. No duplicate tables/functions/routes, no redesigns, no weakening RLS, small controlled changes.
+Follow the fixed 11-phase development order; never jump phases.
 
 ## Memories
 - [Project vision & scope](mem://features/smart-kart-ai-overview) — Vision, tone, treat-as rules, non-goals
