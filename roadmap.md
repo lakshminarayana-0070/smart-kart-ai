@@ -7,7 +7,7 @@ Fixed phase order (from Day 1 audit): 1 DB+security+auth · 2 core ecommerce · 
 - [x] Day 1 build: core database foundation (reviews, seller_profiles, order lifecycle, validation, seller/admin read access) (2026-09-05)
 
 ## Up next
-- [ ] Structured master plan of the whole application (requested 2026-09-05)
+- [x] Structured master plan of the whole application, including UI, UX, functions, and color system (2026-09-05)
 - [ ] Verify checkout → orders end-to-end with a real signed-in session (orders table still 0 rows)
 - [ ] Backfill `brand` on the 12 demo products (brand-style searches return 0 results)
 - [ ] Validate/trim knowledge text before embedding so "Invalid input for embedding" cannot surface
